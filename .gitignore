@@ -1,0 +1,119 @@
+# -----------------------------
+# OS/editor cruft
+# -----------------------------
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+
+# -----------------------------
+# Compiler / build artifacts
+# -----------------------------
+*.o
+*.obj
+*.elf
+*.map
+*.lst
+*.tmp
+*.log
+
+# Your existing patterns (kept)
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+*.dwo
+
+# -----------------------------
+# Kernel module build byproducts
+# -----------------------------
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# -----------------------------
+# IDE / editor settings
+# -----------------------------
+.vscode/
+.vscode/launch.json
+.vscode/tasks.json
+
+# -----------------------------
+# Archive / image files (large)
+# -----------------------------
+*.img
+*.iso
+*.tar
+*.tar.*
+*.gz
+*.bz2
+*.xz
+*.zip
+*.7z
+
+# -----------------------------
+# EC535 lab-specific heavies
+# (don’t version vendor trees or built images)
+# -----------------------------
+# Kernel & BusyBox source/extracted trees
+Lab*/linux-*/
+Lab*/busybox-*/
+EC535/*/linux-*/
+EC535/*/busybox-*/
+
+# “stock” copies provided by the course
+Lab*/stock-*/
+EC535/*/stock-*/
+
+# Rootfs build outputs
+Lab*/rootfs/
+EC535/*/rootfs/
+
+# Disk images and kernel images
+Lab*/rootfs.img
+Lab*/zImage
+EC535/*/rootfs.img
+EC535/*/zImage
+
+# Large one-off submissions / bundles
+Lab*/pately_*.tar.gz
+EC535/*/pately_*.tar.gz
+
+# -----------------------------
+# Keep useful small scripts tracked
+# (don’t ignore .sh; list here just for clarity)
+# -----------------------------
+#! DO NOT add *.sh to ignores
+# e.g., keep these:
+#   Lab*/boot_disk_img.sh
+#   Lab*/rebuild_disk_img.sh
+#   EC535/*/rebuild-rootfs.sh

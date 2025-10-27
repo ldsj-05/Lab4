@@ -51,6 +51,9 @@ static int btn_ped_level  = 1;
 
 static inline int period_ms(void)
 {
+    """
+    Function to get the period of the clock, based on the current/hardware's clock cycle.
+    """
     int hz;
     mutex_lock(&state_lock);
     hz = cycle_rate_hz;
@@ -61,24 +64,37 @@ static inline int period_ms(void)
 
 static inline void led_set(int gpio, int on)
 {
+    """
+    Generic function to set a specified LED to on or off
+    """
     if (gpio_is_valid(gpio))
         gpio_set_value(gpio, on ? 1 : 0);
 }
 
 static inline void all_off(void)
 {
+    """
+    turn all LED oss, uses the 'static inline void led_set() function
+    """
     led_set(red_gpio, 0);
     led_set(yellow_gpio, 0);
     led_set(green_gpio, 0);
 }
 
+// static functions to control all three LED Colors as a function of states (show_green(), show_yellow(), show_red(), show_red_yelllow())
+//      all of one function sets all three LEDs to a specified colors. 
 static inline void show_green(void)  { led_set(green_gpio, 1); led_set(yellow_gpio, 0); led_set(red_gpio, 0); }
 static inline void show_yellow(void) { led_set(green_gpio, 0); led_set(yellow_gpio, 1); led_set(red_gpio, 0); }
 static inline void show_red(void)    { led_set(green_gpio, 0); led_set(yellow_gpio, 0); led_set(red_gpio, 1); }
 static inline void show_red_yellow(void) { led_set(green_gpio, 0); led_set(yellow_gpio, 1); led_set(red_gpio, 1); }
 
+
+// button interupt functions to enable button functionality. 
 static irqreturn_t btn_mode_isr(int irq, void *dev_id)
 {
+    """
+    Which button is this? btn1 or btn2? What does pressing this button do? Is the button debounced, does it need to be debounced?
+    """
     unsigned long now = jiffies;
     if (time_before(now, last_mode_jiffies + msecs_to_jiffies(debounce_ms)))
         return IRQ_HANDLED;
@@ -88,6 +104,7 @@ static irqreturn_t btn_mode_isr(int irq, void *dev_id)
     if (btn_mode_level == 0) { // pressed (active-low)
         mutex_lock(&state_lock);
         // cycle modes: normal, flash-red, flash-yellow, normal
+        // TODO / Question: you are locking and unlocking state_lock during this if-block, but you are not changing it/using it. Why? 
         mode = (mode == MODE_FLASH_YELLOW) ? MODE_NORMAL : (mode + 1);
         mutex_unlock(&state_lock);
     }
@@ -96,6 +113,9 @@ static irqreturn_t btn_mode_isr(int irq, void *dev_id)
 
 static irqreturn_t btn_ped_isr(int irq, void *dev_id)
 {
+    """
+    Which button is this? btn1 or btn2? What does pressing this button do? Is the button debounced, does it need to be debounced?
+    """
     unsigned long now = jiffies;
     if (time_before(now, last_ped_jiffies + msecs_to_jiffies(debounce_ms)))
         return IRQ_HANDLED;
@@ -114,6 +134,10 @@ static irqreturn_t btn_ped_isr(int irq, void *dev_id)
 // traffic loop
 static int traffic_thread(void *arg)
 {
+    """
+    Directally controls the state of the traffic light, runs in a separate thread so main thread is available to handle interupts. 
+    Checks for pedestrian button and mode button being pressed. 
+    """
     while (!kthread_should_stop() && running) {
         int pm = period_ms();
 
@@ -195,6 +219,10 @@ static int traffic_thread(void *arg)
     all_off();
     return 0;
 }
+
+// =======================================================================================================================
+// Basic kernal module read/write/init/exit functions that implement overall functions for copy from usr and copy to user
+// =======================================================================================================================
 
 static ssize_t my_read(struct file *f, char __user *ubuf, size_t len, loff_t *off)
 {
@@ -326,6 +354,7 @@ static int __init my_init(void)
     }
 
     // start the timing thread
+    // runs traffic_thread in separate thread to control traffic light states, state machine for it is implemented there. 
     running = true;
     traffic_task = kthread_run(traffic_thread, NULL, "mytraffic_thread");
     if (IS_ERR(traffic_task)) {
@@ -362,6 +391,7 @@ static void __exit my_exit(void)
 
     unregister_chrdev(MAJOR_NUM, DEVICE_NAME);
 
+    // turn all LEDs off and free their memory space. 
     all_off();
     free_gpios();
 

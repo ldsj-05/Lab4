@@ -186,7 +186,7 @@ static int traffic_thread(void *arg)
 
             // stop phase
             mutex_lock(&state_lock);
-            if (ped_waiting) {
+            if (ped_waiting) { // TODO: should ped_waiting not be determined at the start of the thread? Does it need to be locked?
                 show_red_yellow();            // red+yellow for 5 cycles
                 ped_waiting = false;          // consume request
                 mutex_unlock(&state_lock);

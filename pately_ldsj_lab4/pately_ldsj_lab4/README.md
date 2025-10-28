@@ -28,6 +28,7 @@ For this lab, we created a comprehensive traffic light controller kernel module 
    - Normal Mode: Green (3 cycles) → Yellow (1 cycle) → Red (2 cycles), with pedestrian override
    - Flashing Red Mode: Continuous red light flashing (1 cycle on/off)
    - Flashing Yellow Mode: Continuous yellow light flashing (1 cycle on/off)
+   - Lightbulb Check: When in any mode, you  press both buttons and all lights will flash, reseting it, and returning it to normal mode. 
 
 2. **Button-Based Controls:**
    - BTN0 (GPIO 26): Cycles through operational modes with interrupt-driven debouncing

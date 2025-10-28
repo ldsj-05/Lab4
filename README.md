@@ -1,4 +1,14 @@
-# Lab4
+Lab 4 
 
-video link I have it downloaded so we need to change for submission but js for safekeeping
-https://drive.google.com/file/d/1L9GX-BrN2o_0lZkxXvT5g0aL9ijq7vKx/view?usp=sharing
+Yash Patel pately@bu.edu
+Leah Jones ldsj@bu.edu
+
+We contributed equally on this project. 
+
+Helpful links that were used: 
+https://www.codeproject.com/articles/A-Novices-Guide-to-the-BeagleBone-Platform-and-Sof#comments-section 
+https://lwn.net/Kernel/LDD3/
+https://stackoverflow.com/questions
+https://docs.beagle.cc/intro/beagle101/blinkLED.html
+
+

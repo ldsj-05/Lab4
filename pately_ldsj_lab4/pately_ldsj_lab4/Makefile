@@ -2,13 +2,18 @@
 #/ EC535 Lab 4 - Traffic Light Controller
 # Authors: Yash Patel (pately@bu.edu) and Leah Jones (ldsj@bu.edu)
 
-obj-m += mytraffic.o
+ifneq ($(KERNELRELEASE),)
+	obj-m := mytraffic.o 
+else
+	KERNELDIR := $(EC535)/bbb/stock/stock-linux-4.19.82-ti-rt-r33
+	PWD := $(shell pwd)
+	ARCH := arm
+	CROSS := arm-linux-gnueabihf-
 
-KDIR := /lib/modules/$(shell uname -r)/build
-PWD  := $(shell pwd)
-
-all:
-	$(MAKE) -C $(KDIR) M=$(PWD) modules
+default:
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS) modules
 
 clean:
-	$(MAKE) -C $(KDIR) M=$(PWD) clean
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) ARCH=$(ARCH) clean
+
+endif

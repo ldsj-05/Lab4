@@ -1,6 +1,6 @@
 Lab 4 
 
-Yash Patel pately@bu.edu
+Yash Patel pately@bu.edu and
 Leah Jones ldsj@bu.edu
 
 We contributed equally on this project. 

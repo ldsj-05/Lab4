@@ -19,7 +19,7 @@ static int red_gpio    = 67;      // example from lab sysfs demo
 static int yellow_gpio = 68;      // reset to the real pin ***change***
 static int green_gpio  = 69;      // resest to real pin  ***change ***
 static int btn_mode_gpio = 26;    // BTN0 mode 
-static int btn_ped_gpio  = 27;    // pedestrian
+static int btn_ped_gpio  = 46;    // pedestrian
 module_param(red_gpio, int, 0444);
 module_param(yellow_gpio, int, 0444);
 module_param(green_gpio, int, 0444);
@@ -106,7 +106,7 @@ static irqreturn_t btn_mode_isr(int irq, void *dev_id)
     last_mode_jiffies = now;
 
     /* read pin quickly; assume active-low (0 == pressed) */
-    if (gpio_get_value(btn_mode_gpio) == 0) {
+    if (gpio_get_value(btn_mode_gpio) == 1) {
         unsigned long flags;
         spin_lock_irqsave(&state_lock, flags);
         /* cycle modes (safe single-word op) */
@@ -124,7 +124,7 @@ static irqreturn_t btn_ped_isr(int irq, void *dev_id)
         return IRQ_HANDLED;
     last_ped_jiffies = now;
 
-    if (gpio_get_value(btn_ped_gpio) == 0) { /* pressed (active-low) */
+    if (gpio_get_value(btn_ped_gpio) == 1) { /* pressed (active-low) */
         unsigned long flags;
         spin_lock_irqsave(&state_lock, flags);
         if (mode == MODE_NORMAL)
@@ -164,14 +164,14 @@ static int traffic_thread(void *arg)
             int ped_btn  = gpio_get_value(btn_ped_gpio);
 
             /* Extra credit "lightbulb check" mode: both held */
-            if (mode_btn == 0 && ped_btn == 0) {
+            if (mode_btn == 1 && ped_btn == 1) {
                 show_red();
                 led_set(yellow_gpio, 1);
                 led_set(green_gpio, 1);
 
                 /* wait while both held */
                 while (!kthread_should_stop() && running) {
-                    if (gpio_get_value(btn_mode_gpio) != 0 || gpio_get_value(btn_ped_gpio) != 0)
+                    if (gpio_get_value(btn_mode_gpio) != 1 || gpio_get_value(btn_ped_gpio) != 1)
                         break;
                     msleep(30);
                 }
